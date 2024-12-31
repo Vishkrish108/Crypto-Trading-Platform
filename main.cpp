@@ -1,5 +1,28 @@
 #include <iostream>
 
+void printMenu();
+void printHelp();
+void printStatistics();
+void makeOffer();
+void makeBid();
+void viewPortfolio();
+void simulateNextTimeframe();
+void displayInputError();
+void processChoice(int choice);
+int userChoice();
+
+
+int main(){
+    std::cout << "Welcome to the stock exchange!" << std::endl;
+    while(true){
+        printMenu();
+        int choice = userChoice();      // Taking user's choice
+        processChoice(choice);        
+    }
+    return 0;
+}
+
+
 void printMenu(){
     std::cout << "======================" << std::endl;
     
@@ -25,45 +48,61 @@ void printMenu(){
     std::cout << "Enter a number 1-6: " << std::endl;
 }
 
-void processChoice(int choice){
-    if (choice == 1){
-        std::cout << "Help - Your aim is to make profits by analysing the market. Sell high, buy low" << std::endl;
-    }
-    else if (choice == 2){
-        std::cout << "TO DO" << std::endl;
-    }
-    else if (choice == 3){
-        std::cout << "TO DO" << std::endl;
-    }
-    else if (choice == 4){
-        std::cout << "TO DO" << std::endl;
-    }
-    else if (choice == 5){
-        std::cout << "TO DO" << std::endl;
-    }
-    else if (choice == 6){
-        std::cout << "Moving on..." << std::endl;
-    }
-    else{
-        std::cout << "Bad input. Please type a number 1-6" << std::endl;
-    }
-    
+int userChoice(){
+    int choice;
+    std::cin >> choice;
+    std::cout << "You chose: " << choice << std::endl;
+    return choice;
 }
 
-int main(){
-    std::cout << "Welcome to the stock exchange!" << std::endl;
-    while(true){
-        printMenu();
+void printHelp(){
+    std::cout << "Help - Your aim is to make profits by analysing the market. Sell high, buy low" << std::endl;
+}
 
-        // Taking user's choice
-        int choice;
-        std::cin >> choice;
-        std::cout << "You chose: " << choice << std::endl;
+void printStatistics(){
+    std::cout << "TO DO" << std::endl;
+}
 
-        processChoice(choice);        
-        
+void makeOffer(){
+    std::cout << "TO DO" << std::endl;
+}
 
+void makeBid(){
+    std::cout << "TO DO" << std::endl;
+}
+
+void viewPortfolio(){
+    std::cout << "TO DO" << std::endl;
+}
+
+void simulateNextTimeframe(){
+    std::cout << "Moving on..." << std::endl;
+}
+
+void displayInputError(){
+    std::cout << "Invalid input. Please enter a number 1-6" << std::endl;
+}
+
+void processChoice(int choice){
+    if (choice == 1){   // help
+        printHelp();
     }
-    return 0;
-
+    else if (choice == 2){ // print stats
+        printStatistics();
+    }
+    else if (choice == 3){  // make an offer
+        makeOffer();
+    }
+    else if (choice == 4){  // make a bid
+        makeBid();
+    }
+    else if (choice == 5){  // view personal portfolio
+        viewPortfolio();
+    }
+    else if (choice == 6){  // continue
+        simulateNextTimeframe();
+    }
+    else{
+        displayInputError();
+    }    
 }
