@@ -1,4 +1,6 @@
 #include <iostream>
+#include <string>       // std::string name{"name"};  std::string name = "name";
+#include <vector>        
 
 void printMenu();
 void printHelp();
@@ -10,6 +12,26 @@ void simulateNextTimeframe();
 void displayInputError();
 void processChoice(int choice);
 int userChoice();
+
+enum class orderBookType {bid, ask};
+
+class OrderBook{
+    public:
+        OrderBook(double price, double amount, std::string timestamp, 
+                    std::string product, orderBookType orderType)
+        : price(price), amount(amount), timestamp(timestamp),
+         product(product), orderType(orderType)
+        {
+
+        }
+        double price;
+        double amount;
+        std::string timestamp;
+        std::string product;
+        orderBookType orderType;
+};
+
+
 
 
 int main(){
@@ -27,22 +49,22 @@ void printMenu(){
     std::cout << "======================" << std::endl;
     
     // 1. Help
-    std::cout << "1: Print help" << std::endl;
-        
+    std::cout << "[1] Print help" << std::endl;
+
     // 2. Print the stats/orders
-    std::cout << "2: Print exchange stats" << std::endl;
+    std::cout << "[2] Print exchange stats" << std::endl;
     
     // 3. Make an offer
-    std::cout << "3. Make an offer " << std::endl;
+    std::cout << "[3] Make an offer " << std::endl;
     
     // 4. Make a bid
-    std::cout << "4. Make a bid " << std::endl;
+    std::cout << "[4] Make a bid " << std::endl;
     
     // 5. View personal portfolio
-    std::cout << "5: Print wallet" << std::endl;
+    std::cout << "[5] Print wallet" << std::endl;
     
     // 6. Continue
-    std::cout << "6: Continue" << std::endl;
+    std::cout << "[6] Continue" << std::endl;
     
     std::cout << "======================" << std::endl;
     std::cout << "Enter a number 1-6: " << std::endl;
