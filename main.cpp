@@ -1,6 +1,7 @@
 #include <iostream>
 #include <string>       // std::string name{"name"};  std::string name = "name";
-#include <vector>        
+#include <vector>
+#include "OrderBook.h"   
 
 void printMenu();
 void printHelp();
@@ -12,24 +13,6 @@ void simulateNextTimeframe();
 void displayInputError();
 void processChoice(int choice);
 int userChoice();
-
-enum class orderBookType {bid, ask};
-
-class OrderBook{
-    public:
-        OrderBook(double price, double amount, std::string timestamp, 
-                    std::string product, orderBookType orderType)
-        : price(price), amount(amount), timestamp(timestamp),
-         product(product), orderType(orderType)
-        {
-
-        }
-        double price;
-        double amount;
-        std::string timestamp;
-        std::string product;
-        orderBookType orderType;
-};
 
 
 int main(){
