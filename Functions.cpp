@@ -1,6 +1,8 @@
 #include "Functions.h"
 #include <iostream> 
-
+#include <vector>
+#include <string>
+#include "OrderBook.h"
 
 Functions::Functions(){
     
@@ -9,11 +11,20 @@ Functions::Functions(){
 /** Starts the entire program */
 void Functions::init(){
     std::cout << "Welcome to the stock exchange!" << std::endl;
+    loadOrderBook();
     while(true){       
         printMenu();
         int choice = userChoice();  // Taking user's choice
         processChoice(choice);
     }
+}
+
+void Functions::loadOrderBook(){
+    // orders defined in Functions.h
+    OrderBook order1{1000,0.2, "time", "usd/btc", orderBookType::bid};
+
+    orders.push_back(order1);
+
 }
 
 void Functions::printMenu(){
@@ -53,7 +64,7 @@ void Functions::printHelp(){
 }
 
 void Functions::printStatistics(){
-    std::cout << "TO DO" << std::endl;
+    std::cout << "Market contains: " << orders.size() << " entries" << std::endl;
 }
 
 void Functions::makeOffer(){

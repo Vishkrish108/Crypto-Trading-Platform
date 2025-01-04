@@ -1,5 +1,5 @@
 #include <iostream>
-#include <string>       // std::string name{"name"};  std::string name = "name";
+#include <string>
 #include <vector>
 #include "OrderBook.h"   
 #include "Functions.h"
@@ -9,4 +9,3 @@ int main(){
     app.init();
     return 0;
 }
-
