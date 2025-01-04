@@ -32,8 +32,6 @@ class OrderBook{
 };
 
 
-
-
 int main(){
     std::cout << "Welcome to the stock exchange!" << std::endl;
     while(true){
