@@ -33,8 +33,26 @@ int main(){
 
     std::ifstream csvFile{"order_book.csv"};       // Default is opening file for reading
     
+    std::string line;
     if (csvFile.is_open()){
         std::cout << "file opened successfully" << std::endl;
+        while (std::getline(csvFile, line)){    // getline keeps moving on to the next line
+            // getline reads a line from the file and stores it in the string line
+            std::cout << line << std::endl;
+
+            // Tried this out by adding 'a' in the middle of number. The double took the value upto that letter
+            // Figure out how to handle this properly. Works if the letter is at the start ofc
+            try{
+                double price = std::stod(tokenise(line, ',')[3]);
+                double amount = std::stod(tokenise(line, ',')[4]);
+                std::cout << "Price: " << price << " Amount: " << amount << std::endl;
+            }
+            catch(const std::exception& e){
+                std::cout << "Error: value is not a double" << tokenise(line, ',')[3] << " or " << tokenise(line,',')[4] << std::endl;
+                continue;
+            }
+        }
+
         csvFile.close();
     }
     else{
