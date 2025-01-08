@@ -12,3 +12,14 @@ OrderBook::OrderBook(double price, double amount, std::string timestamp,
         std::string product;
         orderBookType orderType;
 
+orderBookType OrderBook::str2orderBookType(std::string s){
+    if (s == "bid"){
+        return orderBookType::bid;
+    }
+    else if (s == "ask"){
+        return orderBookType::ask;
+    }
+    else{
+        throw std::exception{};
+    }
+}

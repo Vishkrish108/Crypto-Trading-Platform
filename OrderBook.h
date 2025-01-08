@@ -10,6 +10,9 @@ class OrderBook{
     public:
         OrderBook(double price, double amount, std::string timestamp, 
                     std::string product, orderBookType orderType);
+        
+        static orderBookType str2orderBookType(std::string s);
+
         double price;
         double amount;
         std::string timestamp;
