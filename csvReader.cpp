@@ -13,6 +13,24 @@ csvReader::csvReader(){
 
 std::vector<OrderBook> csvReader::readCSV(std::string csvFile){    // returns vector of orderbook
     std::vector<OrderBook> orders;
+    std::ifstream file{csvFile};
+    std::string line;
+    if (file.is_open()){
+        while (std::getline(file, line)){
+            try{
+                OrderBook order = str2OB(tokenise(line, ','));  // tokenise returns vector of strings
+                orders.push_back(order);
+            }
+            catch(const std::exception& e){
+                std::cout << "Error: Bad data. Could not convert str to obe" << std::endl;
+                continue;
+            }
+        }
+        file.close();
+    }
+    else{
+        std::cout << "file not opened" << std::endl;
+    }
     return orders;
 }    
 
