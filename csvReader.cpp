@@ -17,10 +17,23 @@ std::vector<OrderBook> csvReader::readCSV(std::string csvFile){    // returns ve
 }    
 
 std::vector<std::string> csvReader::tokenise(std::string csvLine, char separator){ // returns vector of strings
-    std::vector<std::string> strings;
-    return strings;
+    std::vector<std::string> tokens;
+    std::string token;
+    for(int i = 0; i < csvLine.size(); i++){
+        if(csvLine[i] != separator){
+            token += csvLine[i];
+        } 
+        else{
+            tokens.push_back(token);
+            token = "";
+        }
+    }
+    tokens.push_back(token);
+    return tokens;
 }
 
+
+/** Converts strings to required double and enum formats */
 OrderBook csvReader::str2OB(std::vector<std::string> tokens){ // returns OrderBook itself
     double price, amount;
     if (tokens.size()!=5){
