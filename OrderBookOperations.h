@@ -1,0 +1,14 @@
+#pragma once
+#include "OrderBook.h"
+#include <vector>
+#include <string>
+#include "csvReader.h"
+
+
+// Functions are getOrders, getProducts (usd, btc, eth...)
+class OrderBookOperations{
+    public:
+        OrderBookOperations(std::string filename);
+        std::vector<std::string> getProducts();
+        std::vector<OrderBook> getOrders(std::string product, orderBookType type, std::string timestamp);
+};
