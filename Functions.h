@@ -1,6 +1,8 @@
 #pragma once       // Uses the file only once even if called multiple times
 #include <vector>
 #include "OrderBook.h"
+#include "csvReader.h"
+#include "OrderBookOperations.h"
 
 class Functions{
     public:
@@ -17,6 +19,8 @@ class Functions{
         void displayInputError();
         void processChoice(int choice);
         int userChoice();
-        void loadOrderBook();
-        std::vector<OrderBook> orders;
+//        void loadOrderBook(); Function can be removed because of OrderBookOperations object 
+
+        OrderBookOperations OrderBookOperations{"order_book.csv"}; // Can bypass loadOrderBook()
+//        std::vector<OrderBook> orders;
 };

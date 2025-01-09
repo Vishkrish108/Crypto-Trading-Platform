@@ -12,7 +12,7 @@ Functions::Functions(){
 /** Starts the entire program */
 void Functions::init(){
     std::cout << "Welcome to the stock exchange!" << std::endl;
-    loadOrderBook();
+//    loadOrderBook();
     while(true){       
         printMenu();
         int choice = userChoice();  // Taking user's choice
@@ -20,10 +20,13 @@ void Functions::init(){
     }
 }
 
-void Functions::loadOrderBook(){
-    // orders defined in Functions.h
-    orders = csvReader::readCSV("order_book.csv");
-}
+// Function can be removed. OrderBookOperations object is created in Functions.h
+
+// void Functions::loadOrderBook(){
+//     // orders defined in Functions.h
+//     orders = csvReader::readCSV("order_book.csv");
+// }
+
 
 void Functions::printMenu(){
     std::cout << "======================" << std::endl;
@@ -61,8 +64,8 @@ void Functions::printHelp(){
     std::cout << "Help - Your aim is to make profits by analysing the market. Sell high, buy low" << std::endl;
 }
 
-void Functions::printStatistics(){
-    std::cout << "Market contains: " << orders.size() << " entries" << std::endl;
+void Functions::printStatistics(){ // tempoarary comment till i figure out how to access the orders
+//    std::cout << "Market contains: " << orders.size() << " entries" << std::endl;
 }
 
 void Functions::makeOffer(){

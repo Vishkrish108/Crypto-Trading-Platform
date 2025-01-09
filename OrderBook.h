@@ -11,6 +11,7 @@ class OrderBook{
         OrderBook(double price, double amount, std::string timestamp, 
                     std::string product, orderBookType orderType);
         
+        /** Converts strings to Order book type of bid / ask */
         static orderBookType str2orderBookType(std::string s);
 
         double price;
