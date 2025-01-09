@@ -7,11 +7,11 @@
 class csvReader{
     public:
         csvReader();
-        std::vector<OrderBook> readCSV(std::string csvFile);
+        static std::vector<OrderBook> readCSV(std::string csvFile);
     
     private:
-        std::vector<std::string> tokenise(std::string csvLine, char separator);
-        OrderBook str2OB(std::vector<std::string> strings);     
+        static std::vector<std::string> tokenise(std::string csvLine, char separator);
+        static OrderBook str2OB(std::vector<std::string> strings);     
         // Converts strings to OrderBook entries. Converts str to double and enum
 
 };

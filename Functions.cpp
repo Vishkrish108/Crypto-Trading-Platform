@@ -3,6 +3,7 @@
 #include <vector>
 #include <string>
 #include "OrderBook.h"
+#include "csvReader.h"
 
 Functions::Functions(){
     
@@ -21,10 +22,7 @@ void Functions::init(){
 
 void Functions::loadOrderBook(){
     // orders defined in Functions.h
-    OrderBook order1{1000,0.2, "time", "usd/btc", orderBookType::bid};
-
-    orders.push_back(order1);
-
+    orders = csvReader::readCSV("order_book.csv");
 }
 
 void Functions::printMenu(){
