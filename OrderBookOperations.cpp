@@ -29,6 +29,12 @@ std::vector<std::string> OrderBookOperations::getProducts(){
 }
 
 std::vector<OrderBook> OrderBookOperations::getOrders(std::string product, orderBookType type, std::string timestamp){
-    std::vector<OrderBook> orders;
+    std::vector<OrderBook> temp_orders{};
+    for (OrderBook& i : orders){
+        if (i.orderType == type && i.product == product && i.timestamp == timestamp){
+            //std::cout << "Product: " << i.product << " " << product << std::endl;
+            temp_orders.push_back(i);
+        }
+    }
     return orders;
 }

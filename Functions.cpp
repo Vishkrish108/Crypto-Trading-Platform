@@ -64,7 +64,16 @@ void Functions::printHelp(){
     std::cout << "Help - Your aim is to make profits by analysing the market. Sell high, buy low" << std::endl;
 }
 
-void Functions::printStatistics(){ // tempoarary comment till i figure out how to access the orders
+// Printing wrong entry and entry2 sizes. Gives 3540 for both, for all products
+void Functions::printStatistics(){ 
+    for(std::string const& product : OrderBookOperations.getProducts()){
+        std::cout << "Product: " << product << std::endl;
+        std::vector<OrderBook> entry = OrderBookOperations.getOrders(product, orderBookType::ask, "2020/03/17 17:01:24.884492"); // First timestamp in csv file
+        std::cout << "Asks per product: " << entry.size() << std::endl;
+        std::vector<OrderBook> entry2 = OrderBookOperations.getOrders(product, orderBookType::bid, "2020/03/17 17:01:24.884492"); // First timestamp in csv file
+        std::cout << "Bids per product: " << entry2.size() << std::endl;
+        
+    }
 //    std::cout << "Market contains: " << orders.size() << " entries" << std::endl;
 }
 
