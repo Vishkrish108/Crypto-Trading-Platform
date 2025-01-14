@@ -4,6 +4,7 @@
 #include <string>
 #include "OrderBook.h"
 #include "csvReader.h"
+#include "OrderBookOperations.h"
 
 Functions::Functions(){
     
@@ -70,6 +71,8 @@ void Functions::printStatistics(){
         std::cout << "Product: " << product << std::endl;
         std::vector<OrderBook> entry = OrderBookOperations.getOrders(product, orderBookType::ask, "2020/03/17 17:01:24.884492"); // First timestamp in csv file
         std::cout << "Asks per product: " << entry.size() << std::endl;
+        std::cout << "Highest: " << OrderBookOperations.getHighestPrice(entry) << std::endl;
+        std::cout << "Lowest: " << OrderBookOperations.getLowestPrice(entry) << std::endl;
         std::vector<OrderBook> entry2 = OrderBookOperations.getOrders(product, orderBookType::bid, "2020/03/17 17:01:24.884492"); // First timestamp in csv file
         std::cout << "Bids per product: " << entry2.size() << std::endl;
         

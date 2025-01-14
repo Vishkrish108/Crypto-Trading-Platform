@@ -5,6 +5,7 @@
 #include "OrderBook.h"
 #include "csvReader.h"
 #include <map>
+#include <limits> // for infinity
 
 OrderBookOperations::OrderBookOperations(std::string filename){
     orders = csvReader::readCSV(filename);
@@ -37,4 +38,25 @@ std::vector<OrderBook> OrderBookOperations::getOrders(std::string product, order
         }
     }
     return orders;
+}
+
+
+double OrderBookOperations::getHighestPrice(std::vector<OrderBook>& orders){
+    double max_price = 0.0;
+    for (int i=0; i<orders.size(); ++i){
+        if (orders[i].price>max_price){
+            max_price = orders[i].price;
+        }
+    }   
+    return max_price;
+}
+
+double OrderBookOperations::getLowestPrice(std::vector<OrderBook>& orders){
+    double min_price = std::numeric_limits<double>::infinity();
+    for (int i=0; i<orders.size(); ++i){
+        if (orders[i].price<min_price){
+            min_price = orders[i].price;
+        }
+    }
+    return min_price;
 }

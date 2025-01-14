@@ -11,6 +11,10 @@ class OrderBookOperations{
         OrderBookOperations(std::string filename);
         std::vector<std::string> getProducts();
         std::vector<OrderBook> getOrders(std::string product, orderBookType type, std::string timestamp);
+
+        static double getHighestPrice(std::vector<OrderBook>& orders);
+        static double getLowestPrice(std::vector<OrderBook>& orders);
+
     private:
         std::vector<OrderBook> orders; // to store the orders after reading the csv file
 };
