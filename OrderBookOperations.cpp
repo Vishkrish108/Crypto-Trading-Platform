@@ -37,7 +37,7 @@ std::vector<OrderBook> OrderBookOperations::getOrders(std::string product, order
             temp_orders.push_back(i);
         }
     }
-    return orders;
+    return temp_orders;
 }
 
 

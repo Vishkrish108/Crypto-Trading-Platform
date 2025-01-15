@@ -62,11 +62,11 @@ void Functions::printHelp(){
 void Functions::printStatistics(){ 
     for(std::string const& product : OrderBookOperations.getProducts()){
         std::cout << "Product: " << product << std::endl;
-        std::vector<OrderBook> entry = OrderBookOperations.getOrders(product, orderBookType::ask, "2020/03/17 17:01:24.884492"); // First timestamp in csv file
+        std::vector<OrderBook> entry = OrderBookOperations.getOrders(product, orderBookType::ask, currentTime); 
         std::cout << "Asks per product: " << entry.size() << std::endl;
         std::cout << "Highest: " << OrderBookOperations.getHighestPrice(entry) << std::endl;
         std::cout << "Lowest: " << OrderBookOperations.getLowestPrice(entry) << std::endl;
-        std::vector<OrderBook> entry2 = OrderBookOperations.getOrders(product, orderBookType::bid, "2020/03/17 17:01:24.884492"); // First timestamp in csv file
+        std::vector<OrderBook> entry2 = OrderBookOperations.getOrders(product, orderBookType::bid, currentTime); 
         std::cout << "Bids per product: " << entry2.size() << std::endl;
         
     }
