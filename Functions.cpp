@@ -13,21 +13,14 @@ Functions::Functions(){
 /** Starts the entire program */
 void Functions::init(){
     std::cout << "Welcome to the stock exchange!" << std::endl;
-//    loadOrderBook();
+
+    currentTime = OrderBookOperations.getEarliestTimestamp(); // First timestamp in csv file
     while(true){       
         printMenu();
         int choice = userChoice();  // Taking user's choice
         processChoice(choice);
     }
 }
-
-// Function can be removed. OrderBookOperations object is created in Functions.h
-
-// void Functions::loadOrderBook(){
-//     // orders defined in Functions.h
-//     orders = csvReader::readCSV("order_book.csv");
-// }
-
 
 void Functions::printMenu(){
     std::cout << "======================" << std::endl;
@@ -94,6 +87,7 @@ void Functions::viewPortfolio(){
 
 void Functions::simulateNextTimeframe(){
     std::cout << "Moving on..." << std::endl;
+    currentTime = OrderBookOperations.getNextTimestamp(currentTime);
 }
 
 void Functions::displayInputError(){
@@ -122,4 +116,5 @@ void Functions::processChoice(int choice){
     else{
         displayInputError();
     }    
+    std::cout << "Current time is: " << currentTime << std::endl;
 }

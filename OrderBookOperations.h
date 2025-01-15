@@ -15,6 +15,10 @@ class OrderBookOperations{
         static double getHighestPrice(std::vector<OrderBook>& orders);
         static double getLowestPrice(std::vector<OrderBook>& orders);
 
+        std::string getEarliestTimestamp(); // Returns the first timestamp in the csv file
+        std::string getNextTimestamp(std::string timestamp);
+
+
     private:
         std::vector<OrderBook> orders; // to store the orders after reading the csv file
 };

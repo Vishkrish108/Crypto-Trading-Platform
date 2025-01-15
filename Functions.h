@@ -19,8 +19,8 @@ class Functions{
         void displayInputError();
         void processChoice(int choice);
         int userChoice();
-//        void loadOrderBook(); Function can be removed because of OrderBookOperations object 
 
+        std::string currentTime;  // Represents the current time in the simulation
         OrderBookOperations OrderBookOperations{"order_book.csv"}; // Can bypass loadOrderBook()
 //        std::vector<OrderBook> orders;
 };

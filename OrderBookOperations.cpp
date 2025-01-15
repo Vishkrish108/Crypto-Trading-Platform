@@ -60,3 +60,25 @@ double OrderBookOperations::getLowestPrice(std::vector<OrderBook>& orders){
     }
     return min_price;
 }
+
+
+std::string OrderBookOperations::getEarliestTimestamp(){
+    return orders[0].timestamp;
+}
+
+std::string OrderBookOperations::getNextTimestamp(std::string timestamp){
+    std::string next_timestamp="";
+    for (int i=0; i<orders.size(); ++i){
+        if (orders[i].timestamp > timestamp){
+            next_timestamp = orders[i].timestamp;
+            break;
+        }
+    }
+
+    if (next_timestamp==""){
+        // return getNextTimestamp(orders[0].timestamp); // If i want to loop back to the start
+        return "No next timestamp";
+    }
+
+    return next_timestamp;
+}
