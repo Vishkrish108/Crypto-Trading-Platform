@@ -53,15 +53,16 @@ std::vector<std::string> csvReader::tokenise(std::string csvLine, char separator
 
 /** Converts strings to required double and enum formats */
 OrderBook csvReader::str2OB(std::vector<std::string> tokens){ // returns OrderBook itself
+    // tokens = timestamp, product, orderType, price, amount
     double price, amount;
     if (tokens.size()!=5){
         //std::cout << "Error: wrong number of tokens" << std::endl;
         throw std::exception{};
     }
-
+    
     try{
-        price = std::stod(tokens[3]);
-        amount = std::stod(tokens[4]);
+        price = std::stod(tokens[3]); // Price
+        amount = std::stod(tokens[4]); // Amount
     }
     catch(const std::exception& e){
         std::cout << "Error: value is not a double" << tokens[3] << " or " << tokens[4] << std::endl;

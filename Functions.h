@@ -19,6 +19,7 @@ class Functions{
         void displayInputError();
         void processChoice(int choice);
         int userChoice();
+        std::vector<std::string> convertTokensToSize5(std::vector<std::string>& tokens);
 
         std::string currentTime;  // Represents the current time in the simulation
         OrderBookOperations OrderBookOperations{"order_book.csv"}; // Can bypass loadOrderBook()

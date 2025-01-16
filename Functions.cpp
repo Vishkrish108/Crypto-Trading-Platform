@@ -5,6 +5,7 @@
 #include "OrderBook.h"
 #include "csvReader.h"
 #include "OrderBookOperations.h"
+#include <limits>
 
 Functions::Functions(){
     
@@ -41,10 +42,24 @@ void Functions::printMenu(){
     std::cout << "[5] Print wallet" << std::endl;
     
     // 6. Continue
-    std::cout << "[6] Continue" << std::endl;
+    std::cout << "[6] Continue to next timeframe" << std::endl;
     
     std::cout << "======================" << std::endl;
     std::cout << "Enter a number 1-6: " << std::endl;
+}
+
+std::vector<std::string> Functions::convertTokensToSize5(std::vector<std::string>& tokens){     // returns 5 strings, including timestamp and order type
+    // tokens = timestamp, product, orderType, price, amount
+    std::string product = tokens[0];
+    double price = std::stod(tokens[1]);
+    double amount = std::stod(tokens[2]);
+    tokens[0] = currentTime;
+    tokens[1] = product;
+    tokens[2] = "ask";  // Convert to OB type using csvReader::str2OB
+    tokens.resize(5);
+    tokens[3] = std::to_string(price);      // Defined as per OrderBook format
+    tokens[4] = std::to_string(amount);
+    return tokens;
 }
 
 int Functions::userChoice(){
@@ -73,8 +88,32 @@ void Functions::printStatistics(){
 //    std::cout << "Market contains: " << orders.size() << " entries" << std::endl;
 }
 
+/** Putting out an offer and storing in the orderbook */
 void Functions::makeOffer(){
-    std::cout << "TO DO" << std::endl;
+    std::string userLine;
+    std::cout << "Enter the ask in format Product to be sold, Price, Amount" << std::endl;
+    std::cout << "For example: BTC/USDT, 10000, 0.5" << std::endl;
+    std::cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n'); // Clearing the buffer, allowing the input to be read properly.
+    std::getline(std::cin, userLine);    
+
+    std::vector<std::string> tokens = csvReader::tokenise(userLine, ',');
+    if (tokens.size() != 3){
+        std::cout << "Invalid input. Please enter in the format Product, Price, Amount" << std::endl;
+        return;
+    }
+    std::cout << "Product: " << tokens[0] << " Price: " << tokens[1] << " Amount: " << tokens[2] << std::endl;
+    tokens = convertTokensToSize5(tokens);
+    try{
+        if (tokens.size()==5){
+            ;
+        }
+    }
+    catch(const std::exception& e){
+        std::cout << "Error: Size of entered input not five " << std::endl;
+        throw;
+    }
+    OrderBook order = csvReader::str2OB(tokens);
+    // Need to now push this to the csv file
 }
 
 void Functions::makeBid(){
