@@ -48,24 +48,36 @@ void Functions::printMenu(){
     std::cout << "Enter a number 1-6: " << std::endl;
 }
 
+/** Converts vector of strings of size 3 to size 5 by adding type and timestamp. Accessed by the makeOffer function */
 std::vector<std::string> Functions::convertTokensToSize5(std::vector<std::string>& tokens){     // returns 5 strings, including timestamp and order type
     // tokens = timestamp, product, orderType, price, amount
     std::string product = tokens[0];
-    double price = std::stod(tokens[1]);
-    double amount = std::stod(tokens[2]);
+    std::string price = tokens[1];
+    std::string amount = tokens[2];
     tokens[0] = currentTime;
     tokens[1] = product;
     tokens[2] = "ask";  // Convert to OB type using csvReader::str2OB
     tokens.resize(5);
-    tokens[3] = std::to_string(price);      // Defined as per OrderBook format
-    tokens[4] = std::to_string(amount);
+    tokens[3] = price;      // Defined as per OrderBook format
+    tokens[4] = amount;
+    
     return tokens;
 }
 
 int Functions::userChoice(){
     int choice;
-    std::cin >> choice;
-    std::cout << "You chose: " << choice << std::endl;
+    // std::cin >> choice;
+    // std::cout << "You chose: " << choice << std::endl;
+    // return choice;
+    std::string input;
+    std::getline(std::cin, input);
+    try{
+        choice = std::stoi(input);
+    }
+    catch(const std::exception& e){
+        std::cout << "Non integer input" <<std::endl;
+        choice = 0;
+    }
     return choice;
 }
 
@@ -102,7 +114,14 @@ void Functions::makeOffer(){
         return;
     }
     std::cout << "Product: " << tokens[0] << " Price: " << tokens[1] << " Amount: " << tokens[2] << std::endl;
-    tokens = convertTokensToSize5(tokens);
+    
+    try{
+        tokens = convertTokensToSize5(tokens);
+    }
+    catch(const std::exception& e){
+        std::cout << "Input not in correct format" << std::endl;     
+    }
+
     try{
         if (tokens.size()==5){
             ;
@@ -113,6 +132,11 @@ void Functions::makeOffer(){
         throw;
     }
     OrderBook order = csvReader::str2OB(tokens);
+
+    if (order.product == "ERROR"){
+        std::cout << "An error occured with your input. Kindly retry" << std::endl;
+    }
+
     // Need to now push this to the csv file
 }
 

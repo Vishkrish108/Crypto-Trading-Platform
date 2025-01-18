@@ -59,14 +59,15 @@ OrderBook csvReader::str2OB(std::vector<std::string> tokens){ // returns OrderBo
         //std::cout << "Error: wrong number of tokens" << std::endl;
         throw std::exception{};
     }
-    
+
     try{
         price = std::stod(tokens[3]); // Price
         amount = std::stod(tokens[4]); // Amount
     }
     catch(const std::exception& e){
         std::cout << "Error: value is not a double" << tokens[3] << " or " << tokens[4] << std::endl;
-        throw;
+        tokens[1] = "ERROR";
+//        throw;
     }
         
     OrderBook order{price,amount,tokens[0],tokens[1], OrderBook::str2orderBookType(tokens[2])};
