@@ -18,6 +18,7 @@ class OrderBookOperations{
         std::string getEarliestTimestamp(); // Returns the first timestamp in the csv file
         std::string getNextTimestamp(std::string timestamp);
 
+        void insertAsks(OrderBook& order);
 
     private:
         std::vector<OrderBook> orders; // to store the orders after reading the csv file

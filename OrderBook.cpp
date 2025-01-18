@@ -23,3 +23,7 @@ orderBookType OrderBook::str2orderBookType(std::string s){
         throw std::exception{};
     }
 }
+
+bool OrderBook::sortByTimestamp(OrderBook& A, OrderBook& B){
+    return A.timestamp < B.timestamp;
+}

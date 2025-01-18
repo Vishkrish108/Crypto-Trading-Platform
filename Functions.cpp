@@ -120,7 +120,7 @@ void Functions::makeOffer(){
 
     try{
         if (tokens.size()==5){
-            ;
+            std::cout << "Dubugging in Functions::makeOffer. This line should appear" << std::endl;
         }
     }
     catch(const std::exception& e){
@@ -132,8 +132,9 @@ void Functions::makeOffer(){
     if (order.product == "ERROR"){
         std::cout << "An error occured with your input. Kindly retry" << std::endl;
     }
-
-    // Need to now push this to the csv file
+    else{   //Pushing to csv
+        OrderBookOperations.insertAsks(order);
+    }
 }
 
 void Functions::makeBid(){

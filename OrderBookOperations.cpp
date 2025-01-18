@@ -6,6 +6,7 @@
 #include "csvReader.h"
 #include <map>
 #include <limits> // for infinity
+#include <algorithm> // for sort
 
 OrderBookOperations::OrderBookOperations(std::string filename){
     orders = csvReader::readCSV(filename);
@@ -81,4 +82,11 @@ std::string OrderBookOperations::getNextTimestamp(std::string timestamp){
     }
 
     return next_timestamp;
+}
+
+/** Adds the entry to end of orderbook. Sorts it to place in correct position */
+void OrderBookOperations::insertAsks(OrderBook& order){
+    orders.push_back(order);
+    std::cout << "Push back works!" << std::endl;
+    std::sort(orders.begin(), orders.end(), OrderBook::sortByTimestamp);   
 }

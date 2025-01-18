@@ -14,6 +14,9 @@ class OrderBook{
         /** Converts strings to Order book type of bid / ask */
         static orderBookType str2orderBookType(std::string s);
 
+        /** Returns true if A's timestamp is lesser than B's timestamp */
+        static bool sortByTimestamp(OrderBook& A, OrderBook& B);
+
         double price;
         double amount;
         std::string timestamp;
