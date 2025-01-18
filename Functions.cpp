@@ -66,9 +66,6 @@ std::vector<std::string> Functions::convertTokensToSize5(std::vector<std::string
 
 int Functions::userChoice(){
     int choice;
-    // std::cin >> choice;
-    // std::cout << "You chose: " << choice << std::endl;
-    // return choice;
     std::string input;
     std::getline(std::cin, input);
     try{
@@ -105,7 +102,6 @@ void Functions::makeOffer(){
     std::string userLine;
     std::cout << "Enter the ask in format Product to be sold, Price, Amount" << std::endl;
     std::cout << "For example: BTC/USDT, 10000, 0.5" << std::endl;
-    std::cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n'); // Clearing the buffer, allowing the input to be read properly.
     std::getline(std::cin, userLine);    
 
     std::vector<std::string> tokens = csvReader::tokenise(userLine, ',');
