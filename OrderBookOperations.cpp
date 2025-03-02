@@ -90,3 +90,48 @@ void OrderBookOperations::insertAsks(OrderBook& order){
     std::cout << "Push back works!" << std::endl;
     std::sort(orders.begin(), orders.end(), OrderBook::sortByTimestamp);   
 }
+
+// Using pseudocode as reference 
+std::vector<OrderBook> OrderBookOperations::matchAsksToBids(std::string product, std::string timestamp){
+    //asks = orderbook.asks
+    std::vector<OrderBook> asks = getOrders(product, orderBookType::ask, timestamp);    
+
+    //bids= orderbook.bids
+    std::vector<OrderBook> bids = getOrders(product, orderBookType::bid, timestamp);
+
+    //sales=[]
+    std::vector<OrderBook> sales;
+
+    // Sort the asks and bids in ascending
+    std::sort(asks.begin(), asks.end(), OrderBook::sortByPrice); 
+    std::sort(bids.begin(), bids.end(), OrderBook::sortByPrice);
+    
+    for (OrderBook& ask : asks){
+        for (OrderBook& bid : bids){
+            if (bid.price >= ask.price){
+                OrderBook sale{ask.price, 0.0, timestamp, product, orderBookType::sale};
+                if (bid.amount == ask.amount){
+                    sale.amount = bid.amount;
+                    sales.push_back(sale);
+                    bid.amount = 0;
+                    break;
+                }
+                if (bid.amount > ask.amount){
+                    sale.amount = ask.amount;
+                    sales.push_back(sale);
+                    bid.amount = bid.amount - ask.amount;
+                    break;
+                }
+                if (bid.amount < ask.amount){
+                    sale.amount = ask.amount;
+                    sales.push_back(sale);
+                    ask.amount = ask.amount - bid.amount;
+                    bid.amount = 0;
+                    continue;
+                }
+            }
+        }
+    }   
+    return sales;
+
+};

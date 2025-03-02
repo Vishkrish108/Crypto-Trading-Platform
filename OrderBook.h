@@ -4,7 +4,7 @@
 #pragma once       // Uses the file only once even if called multiple times
 #include <string>
 
-enum class orderBookType {bid, ask};
+enum class orderBookType {bid, ask, sale};
 
 class OrderBook{
     public:
@@ -16,6 +16,11 @@ class OrderBook{
 
         /** Returns true if A's timestamp is lesser than B's timestamp */
         static bool sortByTimestamp(OrderBook& A, OrderBook& B);
+
+        /** Returns true if A's price is lesser than B's price */
+        static bool sortByPrice(OrderBook& A, OrderBook& B){
+            return A.price < B.price;
+        }
 
         double price;
         double amount;

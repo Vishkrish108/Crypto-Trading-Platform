@@ -20,6 +20,8 @@ class OrderBookOperations{
 
         void insertAsks(OrderBook& order);
 
+        std::vector<OrderBook> matchAsksToBids(std::string product, std::string timestamp);
+
     private:
         std::vector<OrderBook> orders; // to store the orders after reading the csv file
 };
