@@ -3,6 +3,7 @@
 #include "OrderBook.h"
 #include "csvReader.h"
 #include "OrderBookOperations.h"
+#include "Wallet.h" 
 
 class Functions{
     public:
@@ -23,5 +24,7 @@ class Functions{
 
         std::string currentTime;  // Represents the current time in the simulation
         OrderBookOperations OrderBookOperations{"order_book.csv"}; // Can bypass loadOrderBook()
+
+        Wallet wallet;
 //        std::vector<OrderBook> orders;
 };

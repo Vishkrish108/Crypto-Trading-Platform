@@ -16,6 +16,9 @@ void Functions::init(){
     std::cout << "Welcome to the stock exchange!" << std::endl;
 
     currentTime = OrderBookOperations.getEarliestTimestamp(); // First timestamp in csv file
+    
+    wallet.insertCurrency("USD", 10000);  // Initialising wallet with 10000 USD
+    
     while(true){       
         printMenu();
         int choice = userChoice();  // Taking user's choice
