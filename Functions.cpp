@@ -80,6 +80,19 @@ int Functions::userChoice(){
 
 void Functions::printHelp(){
     std::cout << "Help - Your aim is to make profits by analysing the market. Sell high, buy low" << std::endl;
+    std::cout << "Continue to trading? (Y/N)" << std::endl;
+    std::string input;
+    std::getline(std::cin, input);
+    if (input == "N" || input == "n"){
+        std::cout << "Exiting..." << std::endl;
+        exit(0);
+    }
+    else if (input == "Y" || input == "y"){
+        std::cout << "Continuing..." << std::endl;
+    }
+    else{
+        std::cout << "Invalid input. Please enter Y or N" << std::endl;
+    }
 }
 
 // Printing wrong entry and entry2 sizes. Gives 3540 for both, for all products
