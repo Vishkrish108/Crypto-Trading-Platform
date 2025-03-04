@@ -17,9 +17,7 @@ void Functions::init(){
     std::cout << "Welcome to the stock exchange!" << std::endl;
 
     currentTime = OrderBookOperations.getEarliestTimestamp(); // First timestamp in csv file
-    
-    wallet.insertCurrency("USD", 10000);  // Initialising wallet with 10000 USD
-    
+        
     while(true){       
         printMenu();
         int choice = userChoice();  // Taking user's choice
@@ -43,7 +41,7 @@ void Functions::printMenu(){
     std::cout << "[4] Make a bid " << std::endl;
     
     // 5. View personal portfolio
-    std::cout << "[5] Print wallet" << std::endl;
+    std::cout << "[5] Access wallet" << std::endl;
     
     // 6. Continue
     std::cout << "[6] Continue to next timeframe" << std::endl;
@@ -160,7 +158,7 @@ void Functions::makeBid(){
 
 void Functions::viewPortfolio(){
     try{
-        wallet.printWallet();
+        wallet.accessWallet();
     }
     catch(std::exception& e){
         std::cout << "Error: Wallet not found\n\n\n" << std::endl;
