@@ -6,6 +6,7 @@
 #include "csvReader.h"
 #include "OrderBookOperations.h"
 #include <limits>
+#include "Wallet.h"
 
 Functions::Functions(){
     
@@ -158,6 +159,12 @@ void Functions::makeBid(){
 }
 
 void Functions::viewPortfolio(){
+    try{
+        wallet.printWallet();
+    }
+    catch(std::exception& e){
+        std::cout << "Error: Wallet not found\n\n\n" << std::endl;
+    }
     std::cout << "TO DO" << std::endl;
 }
 
