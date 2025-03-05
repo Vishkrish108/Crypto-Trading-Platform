@@ -3,7 +3,7 @@ Learning C++ through a project
 
 # Running the code
 To run the code, clone the repo and use 
-- g++ main.cpp OrderBook.cpp Functions.cpp
+- g++ main.cpp OrderBook.cpp Functions.cpp csvReader.cpp OrderBookOperations.cpp Wallet.cpp
 - ./a   (./a.out for some systems)
 
 
@@ -17,8 +17,8 @@ To run the code, clone the repo and use
 - Functions : Contains most of the basic functions. These are mostly visual for the user and to call the back-end functions. 
 - csvReader : Reads the csv file, parses and tokenises it, and converts to an orderbook entry, correctly storing data in terms of doubles, enums, and strings. 
 - csv_tokenise_algorithm : Contains early versions of code which has been used within csvReader.cpp for parsing.
-
+- Wallet : Contains every function that deals with the handling of currencies, including but not restricted to insertion, removal, updation, and viewing details.  
 
 # TO DO (for my reference)
-- Complete makeBids function.
-- Implement the matching algorithm.
+- Add a 'removeOffers' function
+- Add coloring to the terminal commands 
