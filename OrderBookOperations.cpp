@@ -85,7 +85,7 @@ std::string OrderBookOperations::getNextTimestamp(std::string timestamp){
 }
 
 /** Adds the entry to end of orderbook. Sorts it to place in correct position */
-void OrderBookOperations::insertAsks(OrderBook& order){
+void OrderBookOperations::insertEntry(OrderBook& order){
     orders.push_back(order);
     std::cout << "Push back works!" << std::endl;
     std::sort(orders.begin(), orders.end(), OrderBook::sortByTimestamp);   

@@ -12,7 +12,7 @@ class Wallet{
         void insertCurrency(std::string type, double amount);
         void removeCurrency(std::string type, double amount);
         void printWallet();
-        std::string toString();
+        bool checkWallet(std::string type, double amount);
 
     private:
         std::map<std::string, double> currencies;      

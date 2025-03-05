@@ -18,7 +18,7 @@ class OrderBookOperations{
         std::string getEarliestTimestamp(); // Returns the first timestamp in the csv file
         std::string getNextTimestamp(std::string timestamp);
 
-        void insertAsks(OrderBook& order);
+        void insertEntry(OrderBook& order);
 
         std::vector<OrderBook> matchAsksToBids(std::string product, std::string timestamp);
 

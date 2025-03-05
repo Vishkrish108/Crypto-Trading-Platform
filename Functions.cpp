@@ -100,7 +100,7 @@ void Functions::printHelp(){
 // Printing wrong entry and entry2 sizes. Gives 3540 for both, for all products
 void Functions::printStatistics(){ 
     for(std::string const& product : OrderBookOperations.getProducts()){
-        std::cout << "Product: " << product << std::endl;
+        std::cout << "\n\nProduct: " << product << std::endl;
         std::vector<OrderBook> entry = OrderBookOperations.getOrders(product, orderBookType::ask, currentTime); 
         std::cout << "Asks per product: " << entry.size() << std::endl;
         std::cout << "Highest: " << OrderBookOperations.getHighestPrice(entry) << std::endl;
@@ -148,12 +148,48 @@ void Functions::makeOffer(){
         std::cout << "An error occured with your input. Kindly retry" << std::endl;
     }
     else{   //Pushing to csv
-        OrderBookOperations.insertAsks(order);
+        OrderBookOperations.insertEntry(order);
     }
 }
 
 void Functions::makeBid(){
-    std::cout << "TO DO" << std::endl;
+    while (true){
+        std::string type;
+        double amount;
+        double price;
+        std::cout << "Enter currency to be traded: " << std::endl;
+        std::getline(std::cin, type);
+        std::cout << "Enter amount: " << std::endl;
+        std::cin >> amount;
+
+        Wallet wallet;
+        if (wallet.checkWallet(type, amount)){
+            // Make bid
+            std::string timestamp = currentTime;
+            std::cout << "Enter price: " << std::endl;
+            std::cin >> price;
+            OrderBook order{price, amount, timestamp, type, orderBookType::bid}; 
+            // Finally
+            OrderBookOperations.insertEntry(order);
+            std::cout << "Bid successfully placed" << std::endl;
+        }
+        else{
+            std::cout << "Sufficient funds do not exist in wallet for this currency\n" << std::endl;
+        }
+        std::cout << "Continue trading? (Y/N)" << std::endl;
+        std::string input;
+        std::cin >> input;
+        if (input == "N" || input == "n"){
+            std::cout << "Exiting..." << std::endl;
+            exit(0);
+        }
+        else if (input == "Y" || input == "y"){
+            std::cout << "Continuing..." << std::endl;
+        }
+        else{
+            std::cout << "Invalid input. Please enter Y or N" << std::endl;
+        }
+    }
 }
 
 void Functions::viewPortfolio(){
@@ -163,7 +199,6 @@ void Functions::viewPortfolio(){
     catch(std::exception& e){
         std::cout << "Error: Wallet not found\n\n\n" << std::endl;
     }
-    std::cout << "TO DO" << std::endl;
 }
 
 void Functions::simulateNextTimeframe(){

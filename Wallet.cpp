@@ -71,28 +71,43 @@ void Wallet::insertCurrency(std::string type, double amount){
 
 void Wallet::removeCurrency(std::string type, double amount){
     if (currencies.count(type)==0){
-        throw "Currency not found";
+        // throw "Currency not found";
+        std::cout << "Currency not found in wallet\n" << std::endl;
+        return;
     }
     else{
         double balance = currencies[type];
         if (balance < amount){
-            throw "Insufficient funds";
+            // throw "Insufficient funds";
+            std::cout << "Insufficient funds. Cannot remove " << amount << " " << type << " from wallet\n" << std::endl;
+            return;
         }
         balance -= amount;
         currencies[type] = balance;
-        std::cout << "Successfully removed " << amount << " " << type << " from wallet" << std::endl;
+        std::cout << "Successfully removed " << amount << " " << type << " from wallet\n" << std::endl;
     }
 }
 
 
-void Wallet::printWallet(){ // empty wallet handled in Functions.cpp
-    for (int i=0; i<currencies.size(); ++i){
-        std::cout << currencies[0] << std::endl;
-        //std::cout << currencies[0] << currencies[1] << std::endl; //In my head currencies[0]->type, currencies[1]->amount but this throws an error
+void Wallet::printWallet(){ // empty wallet handled in accessWallet()
+    if (currencies.size()==0){
+        std::cout << "Wallet is empty\n" << std::endl;
+        return;
+    }
+    for (std::pair<std::string, double> element : currencies){
+        std::cout << element.first << ": " << element.second << std::endl;
     }
 }
 
 
-std::string Wallet::toString(){
-    return "Wallet";
+bool Wallet::checkWallet(std::string type, double amount){
+    for (std::pair<std::string, double> element : currencies){
+        if (element.first == type){
+            if (currencies[type]-amount >= 0){
+                return true;
+            }
+            return false;
+        }
+    }
+    return false;
 }
