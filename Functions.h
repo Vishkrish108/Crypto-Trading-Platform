@@ -23,7 +23,8 @@ class Functions{
         static const int MENU_REGISTER = 8;
         static const int MENU_VIEW_OFFERS = 9;
         static const int MENU_REMOVE_OFFERS = 10;
-        static const int MENU_EXIT = 11;
+        static const int MENU_LOGOUT = 11;
+        static const int MENU_EXIT = 12;
 
         void printMenu();
         void printHelp();
@@ -40,6 +41,7 @@ class Functions{
         void login();
         void registerUser();
         void viewOffers();
+        void logout();
 
         std::string currentUser;  // Stores the username of the logged-in user
         std::map<std::string, User> users;  // Stores user data

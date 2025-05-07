@@ -3,6 +3,8 @@
 #include <vector>
 #include <string>
 #include <map>
+#include <chrono>
+#include <thread>
 #include "OrderBook.h"
 #include "csvReader.h"
 #include "OrderBookOperations.h"
@@ -40,8 +42,9 @@ void Functions::printMenu(){
     std::cout << "7: Login" << std::endl;
     std::cout << "8: Register" << std::endl;
     std::cout << "9: View your offers" << std::endl;
-    std::cout << "10: Remove your offers" << std::endl;
-    std::cout << "11: Exit" << std::endl;
+    std::cout << "10: Remove all of your offers" << std::endl;
+    std::cout << "11: Logout" << std::endl;
+    std::cout << "12: Exit" << std::endl;
 }
 
 /** Converts vector of strings of size 3 to size 5 by adding type and timestamp. Accessed by the makeOffer function */
@@ -116,6 +119,7 @@ void Functions::makeOffer(){
     std::vector<std::string> tokens = csvReader::tokenise(userLine, ',');
     if (tokens.size() != 3){
         std::cout << "Invalid input. Please enter in the format Product, Price, Amount" << std::endl;
+        std::this_thread::sleep_for(std::chrono::seconds(3));
         return;
     }
     std::cout << "Product: " << tokens[0] << " Price: " << tokens[1] << " Amount: " << tokens[2] << std::endl;
@@ -137,7 +141,7 @@ void Functions::makeOffer(){
         throw;
     }
     OrderBook order = csvReader::str2OB(tokens);
-    order.username = "user";
+    order.username = currentUser;  // Use current user instead of hardcoded "user"
 
     if (order.product == "ERROR"){
         std::cout << Colors::RED << "An error occurred with your input. Kindly retry" << Colors::RESET << std::endl;
@@ -164,7 +168,7 @@ void Functions::makeBid(){
             std::string timestamp = currentTime;
             std::cout << "Enter price: " << std::endl;
             std::cin >> price;
-            OrderBook order{price, amount, timestamp, type, orderBookType::bid, "user"};  // adding username
+            OrderBook order{price, amount, timestamp, type, orderBookType::bid, currentUser};  // Use current user
             // Finally
             OrderBookOperations.insertEntry(order);
             std::cout << Colors::GREEN << "Bid successfully placed" << Colors::RESET << std::endl;
@@ -206,33 +210,36 @@ void Functions::displayInputError(){
     std::cout << Colors::RED << "Invalid input. Please enter a number 1-7" << Colors::RESET << std::endl;
 }
 
+void waitForThreeSeconds() {
+    std::cout << Colors::YELLOW << "Processing..." << Colors::RESET << std::endl;
+    std::this_thread::sleep_for(std::chrono::seconds(3));
+}
+
 void Functions::processChoice(int choice){
+    if ((choice == MENU_OFFER || choice == MENU_BID || 
+         choice == MENU_PORTFOLIO || choice == MENU_VIEW_OFFERS || 
+         choice == MENU_REMOVE_OFFERS) && currentUser.empty()) {
+        std::cout << Colors::RED << "Please login first to access this feature." << Colors::RESET << std::endl;
+        std::this_thread::sleep_for(std::chrono::seconds(3));
+        return;
+    }
+
     if (choice == MENU_HELP){
         printHelp();
     }
     else if (choice == MENU_STATS){
         printStatistics();
+        waitForThreeSeconds();
     }
     else if (choice == MENU_OFFER){
-        if (currentUser.empty()) {
-            std::cout << Colors::RED << "Please login first to make an offer" << Colors::RESET << std::endl;
-        } else {
-            makeOffer();
-        }
+        makeOffer();
     }
     else if (choice == MENU_BID){
-        if (currentUser.empty()) {
-            std::cout << Colors::RED << "Please login first to make a bid" << Colors::RESET << std::endl;
-        } else {
-            makeBid();
-        }
+        makeBid();
     }
     else if (choice == MENU_PORTFOLIO){
-        if (currentUser.empty()) {
-            std::cout << Colors::RED << "Please login first to view portfolio" << Colors::RESET << std::endl;
-        } else {
-            viewPortfolio();
-        }
+        viewPortfolio();
+        waitForThreeSeconds();
     }
     else if (choice == MENU_NEXT){
         simulateNextTimeframe();
@@ -245,18 +252,19 @@ void Functions::processChoice(int choice){
     }
     else if (choice == MENU_VIEW_OFFERS){
         viewOffers();
+        waitForThreeSeconds();
     }
     else if (choice == MENU_REMOVE_OFFERS){
-        if (currentUser.empty()) {
-            std::cout << Colors::RED << "Please login first to remove offers" << Colors::RESET << std::endl;
+        bool success = OrderBookOperations.removeOffers(currentUser);
+        if (success) {
+            std::cout << Colors::GREEN << "All your offers have been removed." << Colors::RESET << std::endl;
         } else {
-            bool success = OrderBookOperations.removeOffers(currentUser);
-            if (success) {
-                std::cout << Colors::GREEN << "All your offers have been removed." << Colors::RESET << std::endl;
-            } else {
-                std::cout << Colors::YELLOW << "No offers found to remove." << Colors::RESET << std::endl;
-            }
+            std::cout << Colors::YELLOW << "No offers found to remove." << Colors::RESET << std::endl;
         }
+    }
+    else if (choice == MENU_LOGOUT){
+        logout();
+        waitForThreeSeconds();
     }
     else if (choice == MENU_EXIT){
         std::cout << "Exiting..." << std::endl;
@@ -265,58 +273,103 @@ void Functions::processChoice(int choice){
     else{
         displayInputError();
     }    
+
     if (!currentUser.empty()) {
-        std::cout << "Logged in as: " << currentUser << std::endl;
+        std::cout << Colors::BLUE << "Logged in as: " << currentUser << Colors::RESET << std::endl;
     }
     std::cout << "Current time is: " << currentTime << std::endl;
 }
 
 void Functions::login() {
-    std::string username;
+    std::string username, password;
     std::cout << "Enter your username: ";
     std::cin >> username;
+    std::cout << "Enter your password: ";
+    std::cin >> password;
+    std::cin.ignore(); // Clear the newline from the input buffer
 
-    if (users.find(username) != users.end()) {
+    auto userIt = users.find(username);
+    if (userIt != users.end() && userIt->second.checkPassword(password)) {
         currentUser = username;
         std::cout << Colors::GREEN << "Login successful! Welcome, " << username << Colors::RESET << std::endl;
     } else {
-        std::cout << Colors::RED << "User not found. Please register first." << Colors::RESET << std::endl;
+        std::cout << Colors::RED << "Invalid username or password." << Colors::RESET << std::endl;
     }
 }
 
 void Functions::registerUser() {
-    std::string username;
+    std::string username, password, confirmPassword;
     std::cout << "Enter a new username: ";
     std::cin >> username;
-
-    if (users.find(username) == users.end()) {
-        users[username] = User(username);
-        currentUser = username;
-        std::cout << Colors::GREEN << "Registration successful! Welcome, " << username << Colors::RESET << std::endl;
-    } else {
+    
+    if (users.find(username) != users.end()) {
         std::cout << Colors::RED << "Username already exists. Please choose a different username." << Colors::RESET << std::endl;
+        std::cin.ignore();
+        std::this_thread::sleep_for(std::chrono::seconds(3));
+        return;
     }
+
+    do {
+        std::cout << "Enter password: ";
+        std::cin >> password;
+        std::cout << "Confirm password: ";
+        std::cin >> confirmPassword;
+        
+        if (password != confirmPassword) {
+            std::cout << Colors::RED << "Passwords do not match. Please try again." << Colors::RESET << std::endl;
+        }
+    } while (password != confirmPassword);
+
+    users[username] = User(username, password);
+    currentUser = username;
+    std::cout << Colors::GREEN << "Registration successful! Welcome, " << username << Colors::RESET << std::endl;
+    std::cin.ignore(); // Clear the newline from the input buffer
 }
 
 void Functions::viewOffers() {
     if (currentUser.empty()) {
         std::cout << Colors::RED << "You must be logged in to view your offers." << Colors::RESET << std::endl;
+        std::this_thread::sleep_for(std::chrono::seconds(3));
         return;
     }
 
-    std::vector<OrderBook> userOrders;
-    for (const auto& order : OrderBookOperations.getOrders("", orderBookType::ask, "")) {
-        if (order.username == currentUser) {
-            userOrders.push_back(order);
+    bool hasOffers = false;
+    std::cout << Colors::GREEN << "\nOffers for user: " << currentUser << Colors::RESET << std::endl;
+    
+    // Show asks
+    std::cout << Colors::YELLOW << "\nASK ORDERS:" << Colors::RESET << std::endl;
+    for (const auto& order : OrderBookOperations.getAllOrders()) {
+        if (order.username == currentUser && order.orderType == orderBookType::ask) {
+            std::cout << "Type: ASK, Product: " << order.product 
+                     << ", Price: " << order.price 
+                     << ", Amount: " << order.amount 
+                     << ", Timestamp: " << order.timestamp << std::endl;
+            hasOffers = true;
         }
     }
 
-    if (userOrders.empty()) {
-        std::cout << Colors::YELLOW << "No offers found for user: " << currentUser << Colors::RESET << std::endl;
-    } else {
-        std::cout << Colors::GREEN << "Offers for user: " << currentUser << Colors::RESET << std::endl;
-        for (const auto& order : userOrders) {
-            std::cout << "Product: " << order.product << ", Price: " << order.price << ", Amount: " << order.amount << std::endl;
+    // Show bids
+    std::cout << Colors::YELLOW << "\nBID ORDERS:" << Colors::RESET << std::endl;
+    for (const auto& order : OrderBookOperations.getAllOrders()) {
+        if (order.username == currentUser && order.orderType == orderBookType::bid) {
+            std::cout << "Type: BID, Product: " << order.product 
+                     << ", Price: " << order.price 
+                     << ", Amount: " << order.amount 
+                     << ", Timestamp: " << order.timestamp << std::endl;
+            hasOffers = true;
         }
+    }
+
+    if (!hasOffers) {
+        std::cout << Colors::YELLOW << "No offers found." << Colors::RESET << std::endl;
+    }
+}
+
+void Functions::logout() {
+    if (currentUser.empty()) {
+        std::cout << Colors::YELLOW << "No user is currently logged in." << Colors::RESET << std::endl;
+    } else {
+        std::cout << Colors::GREEN << "Goodbye, " << currentUser << "!" << Colors::RESET << std::endl;
+        currentUser = "";
     }
 }
