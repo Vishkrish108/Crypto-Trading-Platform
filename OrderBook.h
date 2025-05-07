@@ -9,7 +9,7 @@ enum class orderBookType {bid, ask, sale};
 class OrderBook{
     public:
         OrderBook(double price, double amount, std::string timestamp, 
-                    std::string product, orderBookType orderType);
+                    std::string product, orderBookType orderType, std::string username = "default");
         
         /** Converts strings to Order book type of bid / ask */
         static orderBookType str2orderBookType(std::string s);
@@ -27,4 +27,5 @@ class OrderBook{
         std::string timestamp;
         std::string product;
         orderBookType orderType;
+        std::string username;
 };

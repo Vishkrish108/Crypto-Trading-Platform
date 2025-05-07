@@ -2,11 +2,15 @@
 #include <iostream> 
 #include <vector>
 #include <string>
+#include <map>
 #include "OrderBook.h"
 #include "csvReader.h"
 #include "OrderBookOperations.h"
 #include <limits>
 #include "Wallet.h"
+#include "User.h"
+
+#include "Colors.h"
 
 Functions::Functions(){
     
@@ -14,7 +18,7 @@ Functions::Functions(){
 
 /** Starts the entire program */
 void Functions::init(){
-    std::cout << "Welcome to the stock exchange!" << std::endl;
+    std::cout << Colors::BLUE << "Welcome to the stock exchange!" << Colors::RESET << std::endl;
 
     currentTime = OrderBookOperations.getEarliestTimestamp(); // First timestamp in csv file
         
@@ -26,28 +30,18 @@ void Functions::init(){
 }
 
 void Functions::printMenu(){
-    std::cout << "======================" << std::endl;
-    
-    // 1. Help
-    std::cout << "[1] Print help" << std::endl;
-
-    // 2. Print the stats/orders
-    std::cout << "[2] Print exchange stats" << std::endl;
-    
-    // 3. Make an offer
-    std::cout << "[3] Make an offer " << std::endl;
-    
-    // 4. Make a bid
-    std::cout << "[4] Make a bid " << std::endl;
-    
-    // 5. View personal portfolio
-    std::cout << "[5] Access wallet" << std::endl;
-    
-    // 6. Continue
-    std::cout << "[6] Continue to next timeframe" << std::endl;
-    
-    std::cout << "======================" << std::endl;
-    std::cout << "Enter a number 1-6: " << std::endl;
+    std::cout << Colors::BLUE << "\nMENU" << Colors::RESET << std::endl;
+    std::cout << "1: Help" << std::endl;
+    std::cout << "2: Print exchange statistics" << std::endl;
+    std::cout << "3: Make an offer (ask)" << std::endl;
+    std::cout << "4: Make a bid" << std::endl;
+    std::cout << "5: View wallet" << std::endl;
+    std::cout << "6: Next time step" << std::endl;
+    std::cout << "7: Login" << std::endl;
+    std::cout << "8: Register" << std::endl;
+    std::cout << "9: View your offers" << std::endl;
+    std::cout << "10: Remove your offers" << std::endl;
+    std::cout << "11: Exit" << std::endl;
 }
 
 /** Converts vector of strings of size 3 to size 5 by adding type and timestamp. Accessed by the makeOffer function */
@@ -143,12 +137,14 @@ void Functions::makeOffer(){
         throw;
     }
     OrderBook order = csvReader::str2OB(tokens);
+    order.username = "user";
 
     if (order.product == "ERROR"){
-        std::cout << "An error occured with your input. Kindly retry" << std::endl;
+        std::cout << Colors::RED << "An error occurred with your input. Kindly retry" << Colors::RESET << std::endl;
     }
     else{   //Pushing to csv
         OrderBookOperations.insertEntry(order);
+        std::cout << Colors::GREEN << "Offer successfully placed" << Colors::RESET << std::endl;
     }
 }
 
@@ -168,13 +164,13 @@ void Functions::makeBid(){
             std::string timestamp = currentTime;
             std::cout << "Enter price: " << std::endl;
             std::cin >> price;
-            OrderBook order{price, amount, timestamp, type, orderBookType::bid}; 
+            OrderBook order{price, amount, timestamp, type, orderBookType::bid, "user"};  // adding username
             // Finally
             OrderBookOperations.insertEntry(order);
-            std::cout << "Bid successfully placed" << std::endl;
+            std::cout << Colors::GREEN << "Bid successfully placed" << Colors::RESET << std::endl;
         }
         else{
-            std::cout << "Sufficient funds do not exist in wallet for this currency\n" << std::endl;
+            std::cout << Colors::RED << "Sufficient funds do not exist in wallet for this currency" << Colors::RESET << std::endl;
         }
         std::cout << "Continue trading? (Y/N)" << std::endl;
         std::string input;
@@ -202,35 +198,125 @@ void Functions::viewPortfolio(){
 }
 
 void Functions::simulateNextTimeframe(){
-    std::cout << "Moving on..." << std::endl;
+    std::cout << Colors::YELLOW << "Moving on..." << Colors::RESET << std::endl;
     currentTime = OrderBookOperations.getNextTimestamp(currentTime);
 }
 
 void Functions::displayInputError(){
-    std::cout << "Invalid input. Please enter a number 1-6" << std::endl;
+    std::cout << Colors::RED << "Invalid input. Please enter a number 1-7" << Colors::RESET << std::endl;
 }
 
 void Functions::processChoice(int choice){
-    if (choice == 1){   // help
+    if (choice == MENU_HELP){
         printHelp();
     }
-    else if (choice == 2){ // print stats
+    else if (choice == MENU_STATS){
         printStatistics();
     }
-    else if (choice == 3){  // make an offer
-        makeOffer();
+    else if (choice == MENU_OFFER){
+        if (currentUser.empty()) {
+            std::cout << Colors::RED << "Please login first to make an offer" << Colors::RESET << std::endl;
+        } else {
+            makeOffer();
+        }
     }
-    else if (choice == 4){  // make a bid
-        makeBid();
+    else if (choice == MENU_BID){
+        if (currentUser.empty()) {
+            std::cout << Colors::RED << "Please login first to make a bid" << Colors::RESET << std::endl;
+        } else {
+            makeBid();
+        }
     }
-    else if (choice == 5){  // view personal portfolio
-        viewPortfolio();
+    else if (choice == MENU_PORTFOLIO){
+        if (currentUser.empty()) {
+            std::cout << Colors::RED << "Please login first to view portfolio" << Colors::RESET << std::endl;
+        } else {
+            viewPortfolio();
+        }
     }
-    else if (choice == 6){  // continue
+    else if (choice == MENU_NEXT){
         simulateNextTimeframe();
+    }
+    else if (choice == MENU_LOGIN){
+        login();
+    }
+    else if (choice == MENU_REGISTER){
+        registerUser();
+    }
+    else if (choice == MENU_VIEW_OFFERS){
+        viewOffers();
+    }
+    else if (choice == MENU_REMOVE_OFFERS){
+        if (currentUser.empty()) {
+            std::cout << Colors::RED << "Please login first to remove offers" << Colors::RESET << std::endl;
+        } else {
+            bool success = OrderBookOperations.removeOffers(currentUser);
+            if (success) {
+                std::cout << Colors::GREEN << "All your offers have been removed." << Colors::RESET << std::endl;
+            } else {
+                std::cout << Colors::YELLOW << "No offers found to remove." << Colors::RESET << std::endl;
+            }
+        }
+    }
+    else if (choice == MENU_EXIT){
+        std::cout << "Exiting..." << std::endl;
+        exit(0);
     }
     else{
         displayInputError();
     }    
+    if (!currentUser.empty()) {
+        std::cout << "Logged in as: " << currentUser << std::endl;
+    }
     std::cout << "Current time is: " << currentTime << std::endl;
+}
+
+void Functions::login() {
+    std::string username;
+    std::cout << "Enter your username: ";
+    std::cin >> username;
+
+    if (users.find(username) != users.end()) {
+        currentUser = username;
+        std::cout << Colors::GREEN << "Login successful! Welcome, " << username << Colors::RESET << std::endl;
+    } else {
+        std::cout << Colors::RED << "User not found. Please register first." << Colors::RESET << std::endl;
+    }
+}
+
+void Functions::registerUser() {
+    std::string username;
+    std::cout << "Enter a new username: ";
+    std::cin >> username;
+
+    if (users.find(username) == users.end()) {
+        users[username] = User(username);
+        currentUser = username;
+        std::cout << Colors::GREEN << "Registration successful! Welcome, " << username << Colors::RESET << std::endl;
+    } else {
+        std::cout << Colors::RED << "Username already exists. Please choose a different username." << Colors::RESET << std::endl;
+    }
+}
+
+void Functions::viewOffers() {
+    if (currentUser.empty()) {
+        std::cout << Colors::RED << "You must be logged in to view your offers." << Colors::RESET << std::endl;
+        return;
+    }
+
+    std::vector<OrderBook> userOrders;
+    for (const auto& order : OrderBookOperations.getOrders("", orderBookType::ask, "")) {
+        if (order.username == currentUser) {
+            userOrders.push_back(order);
+        }
+    }
+
+    if (userOrders.empty()) {
+        std::cout << Colors::YELLOW << "No offers found for user: " << currentUser << Colors::RESET << std::endl;
+    } else {
+        std::cout << Colors::GREEN << "Offers for user: " << currentUser << Colors::RESET << std::endl;
+        for (const auto& order : userOrders) {
+            std::cout << "Product: " << order.product << ", Price: " << order.price << ", Amount: " << order.amount << std::endl;
+        }
+    }
 }

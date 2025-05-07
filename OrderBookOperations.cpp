@@ -134,4 +134,18 @@ std::vector<OrderBook> OrderBookOperations::matchAsksToBids(std::string product,
     }   
     return sales;
 
-};
+}
+
+bool OrderBookOperations::removeOffers(const std::string& username, const std::string& product) {
+    bool removed = false;
+    auto it = orders.begin();
+    while (it != orders.end()) {
+        if (it->username == username && (product.empty() || it->product == product)) {
+            it = orders.erase(it);
+            removed = true;
+        } else {
+            ++it;
+        }
+    }
+    return removed;
+}

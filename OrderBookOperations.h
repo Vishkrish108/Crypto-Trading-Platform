@@ -19,7 +19,7 @@ class OrderBookOperations{
         std::string getNextTimestamp(std::string timestamp);
 
         void insertEntry(OrderBook& order);
-
+        bool removeOffers(const std::string& username, const std::string& product = "");
         std::vector<OrderBook> matchAsksToBids(std::string product, std::string timestamp);
 
     private:

@@ -1,8 +1,8 @@
 # include "OrderBook.h"
 OrderBook::OrderBook(double price, double amount, std::string timestamp, 
-                    std::string product, orderBookType orderType)
+                    std::string product, orderBookType orderType, std::string username)
         : price(price), amount(amount), timestamp(timestamp),
-         product(product), orderType(orderType)
+         product(product), orderType(orderType), username(username)
         {
 
         }

@@ -22,7 +22,6 @@ std::vector<OrderBook> csvReader::readCSV(std::string csvFile){    // returns ve
                 orders.push_back(order);
             }
             catch(const std::exception& e){
-                std::cout << "Error: Bad data. Could not convert str to obe" << std::endl;
                 continue;
             }
         }
